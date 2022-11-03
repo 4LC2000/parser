@@ -3,8 +3,15 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
+
+use DevCoder\DotEnv;
+
+$absolutePathToEnvFile = __DIR__ . '/.env';
+
+(new DotEnv($absolutePathToEnvFile))->load();
+
 require_once('parseXML.php');
-require_once('config.php');
+// require_once('config.php');
 require_once('DB_functionality.php');
 
 $telegraphParser = new ParseXML(Config::get('application')->url);
