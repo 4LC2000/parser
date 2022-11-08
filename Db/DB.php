@@ -8,7 +8,7 @@ abstract class DB
 {
     protected $config;
     protected $connection;
-    protected const table = self::table;
+    protected const TABLE = self::TABLE;
     public function __construct(array $config)
     {
         $this->config = $config;
@@ -16,17 +16,15 @@ abstract class DB
     }
     protected function connect()
     {
-        try{
+        try {
             $this->connection = new \PDO(
                 "mysql:host={$this->config['host']};dbname={$this->config['dbname']};charset=utf8mb4",
                 $this->config['username'],
                 $this->config['pass']
             );
-        } catch(\PDOException $e){
+        } catch (\PDOException $e) {
             throw new PDOException($e->getMessage(), (int)$e->getCode());
         }
-
-    
     }
 
     //to do insert item object only in post class
@@ -36,16 +34,18 @@ abstract class DB
         $valuesString = implode(", :", array_keys($insertData));
         $keysString = implode(",", array_keys($insertData));
         $this->connection
-            ->prepare("INSERT ".static::table." ($keysString) VALUE (:$valuesString)")
+            ->prepare("INSERT " . static::TABLE . " ($keysString) VALUE (:$valuesString)")
             ->execute($insertData);
     }
-    // public function read()
-    // {
-    //     $queryRead = $this->connection->prepare("SELECT * FROM posts ORDER BY id DESC LIMIT 10;");
-    //     $queryRead->execute();
-    //     $all = $queryRead->fetchAll(\PDO::FETCH_ASSOC);
-    //     var_dump($all);
-    // }
+    public function get($limit = 10)
+    {
+        $queryShow = $this->connection->prepare(
+            "SELECT * FROM ".static::TABLE." ORDER BY id DESC LIMIT $limit;"
+        );
+        $queryShow->execute();
+        return $queryShow->fetchAll(\PDO::FETCH_ASSOC);
+        
+    }
     // public function update($id, $fieldName, $value )
     // {
     //     $queryUpdate = $this->connection->prepare("UPDATE posts SET $fieldName='$value' WHERE id='$id'");
@@ -76,5 +76,3 @@ abstract class DB
 // index
 // parse telegraph
 // database
-
-
