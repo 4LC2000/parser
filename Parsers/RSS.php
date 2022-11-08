@@ -2,7 +2,7 @@
 
 namespace Parsers;
 
-class RSS
+abstract class RSS
 {
     protected $items = [];
     protected $url;
@@ -25,17 +25,8 @@ class RSS
     {
         $this->items[] = $item;
     }
-    protected function parseItem(\SimpleXMLElement $item): void
-    {
-        $this->setItem([
-            'title' => (string)$item->title,
-            'link' => (string)$item->link,
-            'description' => (string)$item->description,
-            'category' => (string)$item->category,
-            'pub_date' => date('Y-m-d H:i:s', strtotime($item->pubDate)),
-
-        ]);
-    }
+    abstract protected function parseItem(\SimpleXMLElement $item): void;
+    
     public function parse(): RSS
     {
         $RSSdocument = get_object_vars($this->document->channel->children());
