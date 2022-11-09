@@ -40,22 +40,30 @@ abstract class DB
     public function get($limit = 10)
     {
         $queryShow = $this->connection->prepare(
-            "SELECT * FROM ".static::TABLE." ORDER BY id DESC LIMIT $limit;"
+            "SELECT * FROM ".static::TABLE." ORDER BY id DESC LIMIT :limit;"
         );
+        $queryShow->bindValue(':limit', $limit, \PDO::PARAM_INT);
         $queryShow->execute();
         return $queryShow->fetchAll(\PDO::FETCH_ASSOC);
         
     }
-    // public function update($id, $fieldName, $value )
-    // {
-    //     $queryUpdate = $this->connection->prepare("UPDATE posts SET $fieldName='$value' WHERE id='$id'");
-    //     $queryUpdate->execute();
-    // }
-    // public function delete($id)
-    // {
-    //     $queryDelete = $this->connection->prepare("DELETE FROM posts  WHERE id='$id'");
-    //     $queryDelete->execute();
-    // }
+     public function update($id, $fieldName, $value)
+     {
+         $queryUpdate = $this->connection
+             ->prepare("UPDATE " . static::TABLE . " SET `$fieldName`=:value WHERE `id`=:id"
+             );
+//            $queryUpdate->bindValue(':fieldName', $fieldName);
+            $queryUpdate->bindValue(':value', $value);
+            $queryUpdate->bindValue(':id', $id);
+
+            $queryUpdate->execute();
+     }
+     public function delete($id)
+     {
+         $queryDelete = $this->connection->prepare("DELETE FROM " . static::TABLE . " WHERE `id`=:id");
+         $queryDelete->bindValue(':id', $id);
+         $queryDelete->execute();
+     }
 
 }
 

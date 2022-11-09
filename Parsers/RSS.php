@@ -18,13 +18,13 @@ abstract class RSS
         );
     }
     public function getItems(): array
-    {
-        return $this->items;
-    }
+        {
+            return $this->items;
+        }
     protected function setItem(array $item): void
-    {
-        $this->items[] = $item;
-    }
+        {
+            $this->items[] = $item;
+        }
     abstract protected function parseItem(\SimpleXMLElement $item): void;
     
     public function parse(): RSS
