@@ -7,6 +7,7 @@ require_once "./vendor/autoload.php";
 
 use Db\Post;
 use Parsers\Kg;
+use Parsers\Kt;
 use Parsers\Telegraph;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -18,14 +19,20 @@ $dotenv->load();
  $kgParser = new Kg($_ENV['Kg_RSSurl']);
  $newsKg = $kgParser->parse()->getItems();
 
+ $ktParser = new Kt($_ENV['Kt_RSSurl']);
+ $newsKt = $ktParser->parse()->getItems();
+
 $postModel = new Post($_ENV);
 
-foreach ($news as $post) {
+foreach ($newsKt as $post) {
     $postModel->store($post);
 }
-foreach ($newsKg as $post) {
-    $postModel->store($post);
-}
+// foreach ($news as $post) {
+//     $postModel->store($post);
+// }
+// foreach ($newsKg as $post) {
+//     $postModel->store($post);
+// }
 
 
 
