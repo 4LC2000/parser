@@ -2,31 +2,29 @@
 
 namespace Parsers;
 
+use Exception;
+
 abstract class RSS
 {
     protected $items = [];
     protected $url;
     protected $document;
 
-    public function __construct($url)
+
+    public function __construct(string $url)
     {
         $this->url = $url;
-        $this->document = new \SimpleXMLElement(
-            $this->url,
-            0,
-            true
-        );
+        $this->document = $this->getDocument();
     }
     public function getItems(): array
-        {
-            return $this->items;
-        }
+    {
+        return $this->items;
+    }
     protected function setItem(array $item): void
-        {
-            $this->items[] = $item;
-        }
-    abstract protected function parseItem(\SimpleXMLElement $item): void;
-    
+    {
+        $this->items[] = $item;
+    }
+
     public function parse(): RSS
     {
         $RSSdocument = get_object_vars($this->document->channel->children());
@@ -36,6 +34,21 @@ abstract class RSS
 
         return $this;
     }
+
+    protected function getDocument()
+    {
+        try {
+            return new \SimpleXMLElement(
+                $this->url,
+                0,
+                true
+            );
+        } catch (\Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    abstract protected function parseItem(\SimpleXMLElement $item): void;
 };
 
 

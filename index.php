@@ -13,28 +13,23 @@ use Parsers\Telegraph;
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
- $telegraphParser = new Telegraph($_ENV['Telegraph_RSSurl']);
- $news = $telegraphParser->parse()->getItems();
- 
- $kgParser = new Kg($_ENV['Kg_RSSurl']);
- $newsKg = $kgParser->parse()->getItems();
+$telegraphParser = new Telegraph($_ENV['TELEGRAF_RSS']);
+$news = $telegraphParser->parse()->getItems();
 
- $ktParser = new Kt($_ENV['Kt_RSSurl']);
- $newsKt = $ktParser->parse()->getItems();
+$kgParser = new Kg($_ENV['KG_RSS']);
+$newsKg = $kgParser->parse()->getItems();
+
+$ktParser = new Kt($_ENV['KT_RSS']);
+$newsKt = $ktParser->parse()->getItems();
 
 $postModel = new Post($_ENV);
 
 foreach ($newsKt as $post) {
     $postModel->store($post);
 }
-// foreach ($news as $post) {
-//     $postModel->store($post);
-// }
-// foreach ($newsKg as $post) {
-//     $postModel->store($post);
-// }
-
-
-
-
-
+foreach ($news as $post) {
+    $postModel->store($post);
+}
+foreach ($newsKg as $post) {
+    $postModel->store($post);
+}

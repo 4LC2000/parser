@@ -9,11 +9,13 @@ abstract class DB
     protected $config;
     protected $connection;
     protected const TABLE = self::TABLE;
+
     public function __construct(array $config)
     {
         $this->config = $config;
         $this->connect();
     }
+
     protected function connect()
     {
         try {
@@ -27,60 +29,45 @@ abstract class DB
         }
     }
 
-    //to do insert item object only in post class
+    abstract protected function validate(array $insertData): bool;
+
     public function store(array $insertData): void
     {
-
-        $valuesString = implode(", :", array_keys($insertData));
-        $keysString = implode(",", array_keys($insertData));
-        $this->connection
-            ->prepare("INSERT " . static::TABLE . " ($keysString) VALUE (:$valuesString)")
-            ->execute($insertData);
+        if ($this->validate($insertData)) {
+            $valuesString = implode(", :", array_keys($insertData));
+            $keysString = implode(",", array_keys($insertData));
+            $this->connection
+                ->prepare("INSERT " . static::TABLE . " ($keysString) VALUE (:$valuesString)")
+                ->execute($insertData);
+        }
     }
-    public function get($limit = 10)
+
+    public function get(int $limit = 10): array
     {
         $queryShow = $this->connection->prepare(
-            "SELECT * FROM ".static::TABLE." ORDER BY id DESC LIMIT :limit;"
+            "SELECT * FROM " . static::TABLE . " ORDER BY id DESC LIMIT :limit;"
         );
         $queryShow->bindValue(':limit', $limit, \PDO::PARAM_INT);
         $queryShow->execute();
         return $queryShow->fetchAll(\PDO::FETCH_ASSOC);
-        
     }
-     public function update($id, $fieldName, $value)
-     {
-         $queryUpdate = $this->connection
-             ->prepare("UPDATE " . static::TABLE . " SET `$fieldName`=:value WHERE `id`=:id"
-             );
-//            $queryUpdate->bindValue(':fieldName', $fieldName);
-            $queryUpdate->bindValue(':value', $value);
-            $queryUpdate->bindValue(':id', $id);
 
-            $queryUpdate->execute();
-     }
-     public function delete($id)
-     {
-         $queryDelete = $this->connection->prepare("DELETE FROM " . static::TABLE . " WHERE `id`=:id");
-         $queryDelete->bindValue(':id', $id);
-         $queryDelete->execute();
-     }
+    public function update(int $id, string $fieldName, string $value): void
+    {
+        $queryUpdate = $this->connection
+            ->prepare(
+                "UPDATE " . static::TABLE . " SET `$fieldName`=:value WHERE `id`=:id"
+            );
+        $queryUpdate->bindValue(':value', $value);
+        $queryUpdate->bindValue(':id', $id);
 
+        $queryUpdate->execute();
+    }
+
+    public function delete(int $id): void
+    {
+        $queryDelete = $this->connection->prepare("DELETE FROM " . static::TABLE . " WHERE `id`=:id");
+        $queryDelete->bindValue(':id', $id);
+        $queryDelete->execute();
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// config.php url
-// index
-// parse telegraph
-// database
