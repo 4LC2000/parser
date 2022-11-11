@@ -20,10 +20,11 @@ class Post extends DB
     {
         $keys = array_keys($insertData);
         $diff = array_diff($this->columns, $keys);
-        dd($diff);
+
         if (empty($diff)) {
             return true;
         };
+
         return false;
     }
 }
