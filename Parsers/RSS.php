@@ -9,12 +9,14 @@ abstract class RSS
     protected $items = [];
     protected $url;
     protected $document;
+    protected $rssNamespace;
+
 
 
     public function __construct(string $url)
     {
         $this->url = $url;
-        $this->document = $this->getDocument();
+        $this->setDocument();
     }
     public function getItems(): array
     {
@@ -35,17 +37,26 @@ abstract class RSS
         return $this;
     }
 
-    protected function getDocument()
+    protected function setDocument()
     {
         try {
-            return new \SimpleXMLElement(
+            $this->document = new \SimpleXMLElement(
                 $this->url,
                 0,
                 true
             );
+            $this->setRssNamespace();
         } catch (\Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+    protected function setRssNamespace()
+    {
+        $this->rssNamespace = $this->document->getNamespaces(true);
+    }
+    protected function getRssNamespace()
+    {
+        return $this->rssNamespace;
     }
 
     abstract protected function parseItem(\SimpleXMLElement $item): void;
