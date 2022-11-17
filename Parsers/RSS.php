@@ -61,14 +61,3 @@ abstract class RSS
 
     abstract protected function parseItem(\SimpleXMLElement $item): void;
 };
-
-
-
- // foreach ($itemValue as $enclosureValues) {
-                            //     $enclosureItem = get_object_vars($enclosureValues);
-
-                                // foreach($enclosureItem as $ecnKeys => $encValue){
-                                //     print_r($enclosureItem);
-                                // }
-                                // array_push($enclosureArray['enclosure'], $enclosureItem['@attributes']);
-                            // }

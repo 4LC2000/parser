@@ -34,15 +34,16 @@ abstract class DB
     public function store(array $insertData): void
     {
         if ($this->validate($insertData)) {
-            $valuesString = implode(", :", array_keys($insertData));
-            $keysString = implode(",", array_keys($insertData));
-            $this->connection
-                ->prepare("INSERT " . static::TABLE . " ($keysString) VALUE (:$valuesString)")
-                ->execute($insertData);
+        $valuesString = implode(", :", array_keys($insertData));
+        $keysString = implode(",", array_keys($insertData));
+        $this->connection
+            ->prepare("INSERT " . static::TABLE . " ($keysString) VALUE (:$valuesString)")
+            ->execute($insertData);
         }
+        else return;
     }
 
-    public function get(int $limit = 10): array
+    public function get(int $limit = 20): array
     {
         $queryShow = $this->connection->prepare(
             "SELECT * FROM " . static::TABLE . " ORDER BY id DESC LIMIT :limit;"
@@ -69,5 +70,14 @@ abstract class DB
         $queryDelete = $this->connection->prepare("DELETE FROM " . static::TABLE . " WHERE `id`=:id");
         $queryDelete->bindValue(':id', $id);
         $queryDelete->execute();
+    }
+    public function getRecordById(int $id)
+    {
+        $queryShow = $this->connection->prepare(
+            "SELECT * FROM " . static::TABLE . " WHERE `id`=:id;"
+        );
+        $queryShow->bindValue(':id', $id, \PDO::PARAM_INT);
+        $queryShow->execute();
+        return $queryShow->fetch();
     }
 }

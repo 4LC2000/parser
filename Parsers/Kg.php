@@ -13,6 +13,7 @@ class Kg extends RSS
             'source' => (string)$item->source,
             'full_text' => (string)$item->children($this->getRssNamespace()['yandex']),
             'pub_date' => date('Y-m-d H:i:s', strtotime($item->pubDate)),
+            'category' => 'Кременчук'
         ]);
     }
 }

@@ -9,27 +9,46 @@ use Db\Post;
 use Parsers\Kg;
 use Parsers\Kt;
 use Parsers\Telegraph;
+use Controllers\PostController;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-$telegraphParser = new Telegraph($_ENV['TELEGRAF_RSS']);
-$news = $telegraphParser->parse()->getItems();
+try {
+    $route = match ($_GET['route'] ?? 'view') {
+        'view' => function () {
+            $postList = new PostController;
+            $postList->view();
+        },
+        'add' => function () {
+            $postController = new PostController;
+            $postController->addNews();
+        },
+        'post' => function () {
+            $postController = new PostController;
+            $postController->post();
+        }
+    };
+    $route();
+} catch (\UnhandledMatchError $e) {
+    var_dump($e);
+}
 
-$kgParser = new Kg($_ENV['KG_RSS']);
-$newsKg = $kgParser->parse()->getItems();
 
-$ktParser = new Kt($_ENV['KT_RSS']);
-$newsKt = $ktParser->parse()->getItems();
+
+
+// $kgParser = new Kg($_ENV['KG_RSS']);
+// $newsKg = $kgParser->parse()->getItems();
+
+// $ktParser = new Kt($_ENV['KT_RSS']);
+// $newsKt = $ktParser->parse()->getItems();
 
 $postModel = new Post($_ENV);
 
-foreach ($newsKt as $post) {
-    $postModel->store($post);
-}
-foreach ($news as $post) {
-    $postModel->store($post);
-}
-foreach ($newsKg as $post) {
-    $postModel->store($post);
-}
+// foreach ($newsKt as $post) {
+//     $postModel->store($post);
+// }
+
+// foreach ($newsKg as $post) {
+//     $postModel->store($post);
+// }
