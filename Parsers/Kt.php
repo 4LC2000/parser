@@ -13,7 +13,7 @@ class Kt extends RSS
             'pub_date' => date('Y-m-d H:i:s', strtotime($item->pubDate)),
             'category' => (string)$item->category,
             'source' => 'KremenToday',
-            'description' => 'Новини сьогодні'
+            'description' => ''
         ]);
     }
 }

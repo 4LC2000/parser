@@ -27,6 +27,14 @@ try {
         'post' => function () {
             $postController = new PostController;
             $postController->post();
+        },
+        'update' => function () {
+            $postController = new PostController;
+            $result = $postController->update();
+
+            if ($result) {
+                header('Location: ' . $_SERVER['HTTP_REFERER']);
+            }
         }
     };
     $route();
@@ -43,7 +51,7 @@ try {
 // $ktParser = new Kt($_ENV['KT_RSS']);
 // $newsKt = $ktParser->parse()->getItems();
 
-$postModel = new Post($_ENV);
+// $postModel = new Post($_ENV);
 
 // foreach ($newsKt as $post) {
 //     $postModel->store($post);

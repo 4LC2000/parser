@@ -32,4 +32,8 @@ class PostController
         $post = $this->posts->getRecordById((int)$_GET['postId']);
         include 'views/new.php';
     }
+    public function update()
+    {
+        return $this->posts->update((int)$_GET['postId'], $_POST);
+    }
 }

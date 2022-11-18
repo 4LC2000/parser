@@ -33,14 +33,35 @@ abstract class DB
 
     public function store(array $insertData): void
     {
-        if ($this->validate($insertData)) {
+        if (!$this->validate($insertData)) {
+            return;
+        }
+
         $valuesString = implode(", :", array_keys($insertData));
         $keysString = implode(",", array_keys($insertData));
         $this->connection
             ->prepare("INSERT " . static::TABLE . " ($keysString) VALUE (:$valuesString)")
-            ->execute($insertData);
+            ->execute($insertData);;
+    }
+
+    public function update(int $id, array $updateData): bool
+    {
+        if (!$this->validate($updateData)) {
+            // return;
         }
-        else return;
+        $updateString = '';
+        foreach ($updateData as $column => $v) {
+            if ($column === array_key_last($updateData)) {
+                $updateString .= "$column=:$column ";
+                break;
+            }
+
+            $updateString .= "$column=:$column, ";
+        }
+
+        return $this->connection
+            ->prepare("UPDATE " . static::TABLE . " SET $updateString WHERE id=:id ;")
+            ->execute($updateData + ['id' => $id]);
     }
 
     public function get(int $limit = 20): array
@@ -51,18 +72,6 @@ abstract class DB
         $queryShow->bindValue(':limit', $limit, \PDO::PARAM_INT);
         $queryShow->execute();
         return $queryShow->fetchAll(\PDO::FETCH_ASSOC);
-    }
-
-    public function update(int $id, string $fieldName, string $value): void
-    {
-        $queryUpdate = $this->connection
-            ->prepare(
-                "UPDATE " . static::TABLE . " SET `$fieldName`=:value WHERE `id`=:id"
-            );
-        $queryUpdate->bindValue(':value', $value);
-        $queryUpdate->bindValue(':id', $id);
-
-        $queryUpdate->execute();
     }
 
     public function delete(int $id): void

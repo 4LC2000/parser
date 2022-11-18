@@ -1,5 +1,3 @@
-<!-- echo "<link rel='stylesheet' href='style.css'>"; -->
-
 <ul>
     <?php foreach($newsList as $news) { ?>
     <li>

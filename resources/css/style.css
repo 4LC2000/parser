@@ -1,3 +1,18 @@
-main{
-    background-color: aqua;
+/* .form{
+    background-color: rgb(123, 177, 153);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.full_text{
+    width: 100%;
+    background-color: rgb(155, 142, 142);
+}
+.form_footer{
+    display: flex;
+    justify-content: space-between;
+} */
+input{
+    min-width: -webkit-fill-available;
 }
