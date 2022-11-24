@@ -1,5 +1,6 @@
 <link rel='stylesheet' href='/resources/css/style.css'>
-<form id="post-update" action="/?route=update&postId=<?php echo $_GET['postId'] ?>" method="POST">
+
+<form id="post-update" action="/?route=update&postId=<?php echo $_GET['postId'] ?>" method="POST" data-post-id="<?php echo $_GET['postId'] ?>">
     <br><br>
     <label for="title">Title</label>
     <input id="title" value="<?php echo $post['title'] ?>" name="title">
@@ -27,7 +28,9 @@
     <br><br>
     <p>
         Pub Date:
-    <?php echo $post['pub_date'] ?>
+        <?php echo $post['pub_date'] ?>
     </p>
-    <button form="post-update">Save</button>
+    <button id="submit_button" form="post-update">Save</button>
 </form>
+
+<script src="dist/app.js" defer></script>

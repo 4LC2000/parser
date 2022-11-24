@@ -3,6 +3,7 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
+
 require_once "./vendor/autoload.php";
 
 use Db\Post;
@@ -35,28 +36,14 @@ try {
             if ($result) {
                 header('Location: ' . $_SERVER['HTTP_REFERER']);
             }
-        }
+        },
+        'save' => function () {
+            $postController = new PostController;
+            $postController->add();
+        },
     };
     $route();
 } catch (\UnhandledMatchError $e) {
     var_dump($e);
 }
 
-
-
-
-// $kgParser = new Kg($_ENV['KG_RSS']);
-// $newsKg = $kgParser->parse()->getItems();
-
-// $ktParser = new Kt($_ENV['KT_RSS']);
-// $newsKt = $ktParser->parse()->getItems();
-
-// $postModel = new Post($_ENV);
-
-// foreach ($newsKt as $post) {
-//     $postModel->store($post);
-// }
-
-// foreach ($newsKg as $post) {
-//     $postModel->store($post);
-// }

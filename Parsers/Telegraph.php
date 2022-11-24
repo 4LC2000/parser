@@ -4,9 +4,6 @@ namespace Parsers;
 
 class Telegraph extends RSS
 {
-
-
-
     protected function parseItem(\SimpleXMLElement $item): void
     {
         $this->setItem([
