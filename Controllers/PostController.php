@@ -52,7 +52,7 @@ class PostController
         }
     }
 
-    public function add()
+    public function add(): void
     {
         dd($_POST);
         $this->store($_POST['news']);
