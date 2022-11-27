@@ -21,7 +21,7 @@ fetch('https://tsn.ua/tags/%D0%9A%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D1%87%D1%83%D0%B
 
 function parse(url) {
     const news = {
-        source: "",
+        source: "dsfsfd",
         full_text: ""
     };
 
