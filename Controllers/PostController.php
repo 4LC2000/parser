@@ -54,7 +54,16 @@ class PostController
 
     public function add(): void
     {
-        dd($_POST);
-        $this->store($_POST['news']);
+        $data = file_get_contents('php://input');
+        if (empty($data)) {
+            return;
+        }
+
+        $data = json_decode($data, true);
+        $data = array_map(function($item){
+            return array_merge($item, ['pub_date' => date('Y-m-d H:i:s', strtotime($item['pub_date']))]);
+        }, $data['data']);
+
+        $this->store($data);
     }
 }
