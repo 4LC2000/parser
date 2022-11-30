@@ -52,4 +52,3 @@ function storeNews(news) {
             console.log(error, 'e');
         });
 }
-
