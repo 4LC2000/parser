@@ -32,4 +32,8 @@ $route = match ($_GET['route'] ?? 'view') {
         $authController = new AuthController;
         $authController->view();
     },
+    'createUser' => function () {
+        $authController = new AuthController;
+        $authController->saveUserData();
+    },
 };
